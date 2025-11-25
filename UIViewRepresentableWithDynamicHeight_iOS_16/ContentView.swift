@@ -67,24 +67,8 @@ extension DynamicHeightView {
     final class InternalView: UIView {
         private let shape = UIView()
         private let toggle = UISwitch()
-        private var shapeHeightConstraint: NSLayoutConstraint?
         
         var toggleAction: ((Bool) -> Void)?
-        
-//        private var shapeInitialHeight: CGFloat = 100.0
-//        override var intrinsicContentSize: CGSize {
-//            let topOffset: CGFloat = 20
-//            let shapeHeight = toggle.isOn ? shapeInitialHeight : 200
-//            let toggleHeight = toggle.frame.height
-//            let totalHeight = topOffset + shapeHeight + topOffset + toggleHeight + topOffset
-//            
-//            let horizontalOffset: CGFloat = 20
-//            let shapeWidth = shape.frame.width
-//            let toggleWidth = toggle.frame.width
-//            let totalWidth = horizontalOffset + max(shapeWidth, toggleWidth) + horizontalOffset
-//            
-//            return .init(width: totalWidth, height: totalHeight)
-//        }
         
         init() {
             super.init(frame: .zero)
@@ -98,8 +82,7 @@ extension DynamicHeightView {
             shape.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20).isActive = true
             shape.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
             shape.widthAnchor.constraint(equalToConstant: 200).isActive = true
-            shapeHeightConstraint = shape.heightAnchor.constraint(equalToConstant: 100)
-            shapeHeightConstraint?.isActive = true
+            shape.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -60).isActive = true
             
             self.addSubview(toggle)
             
@@ -115,18 +98,7 @@ extension DynamicHeightView {
         }
         
         @objc private func didTapToggle() {
-            UIView.animate(withDuration: animationDuration) {
-                if self.toggle.isOn {
-                    self.shapeHeightConstraint?.constant = 200
-                } else {
-                    self.shapeHeightConstraint?.constant = 100
-                }
-                
-                self.layoutIfNeeded()
-            }
-            
             toggleAction?(toggle.isOn)
-            toggle.setNeedsUpdateConstraints()
         }
     }
 }
